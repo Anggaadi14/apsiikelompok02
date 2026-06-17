@@ -82,3 +82,45 @@ export default function MahasiswaDashboard() {
 
   // State: data profil (dari Tahap 2)
   const [profile, setProfile]                   = useState<ProfileData | null>(null);
+  const [profileLoading, setProfileLoading]     = useState(false);
+  const [profileError, setProfileError]         = useState<string | null>(null);
+
+  // State: daftar semester (dari Tahap 2)
+  const [availableSemesters, setAvailableSemesters] = useState<string[]>(['Ganjil 2024/2025']);
+
+  // State: CPL data (BARU di Tahap 3)
+  const [cplData, setCplData]                   = useState<CplDataItem[]>(cplDataFallback);
+  const [detailCpl, setDetailCpl]               = useState<DetailCplItem[]>(detailCPLFallback);
+  const [cplLoading, setCplLoading]             = useState(false);
+  const [cplError, setCplError]                 = useState<string | null>(null);
+
+  // ── Auth Guard ──────────────────────────────────────────────────────────
+  useEffect(() => {
+    const rawUser = sessionStorage.getItem('currentUser');
+    if (!rawUser) {
+      router.push('/');
+      return;
+    }
+    try {
+      const userObj = JSON.parse(rawUser) as UserSession;
+      if (userObj.role !== 'mahasiswa') {
+        router.push(`/dashboard/${userObj.role}`);
+      } else {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setSessionUser(userObj);
+      }
+    } catch {
+      router.push('/');
+    }
+  }, [router]);
+
+  // ── Helper fetch dengan session header ─────────────────────────────────
+  const fetchWithSession = useCallback(
+    async (url: string) => {
+      if (!sessionUser) throw new Error('Session belum tersedia');
+      const res = await fetch(url, {
+        headers: {
+          'X-User-Session': JSON.stringify(sessionUser),
+          'Content-Type': 'application/json',
+        },
+      });
