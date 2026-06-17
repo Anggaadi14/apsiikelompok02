@@ -208,3 +208,45 @@ export default function MahasiswaDashboard() {
     const displayName  = profile?.nama_mahasiswa ?? sessionUser?.name ?? '-';
     const displayNim   = profile?.nim             ?? sessionUser?.identifier ?? '-';
     const displayProdi = profile?.prodi           ?? 'Teknik Industri UNS';
+
+    const tercapaiCount = cplData.filter((c) => c.status === 'Tercapai').length;
+    const belumTercapai = cplData.filter((c) => c.status === 'Belum Tercapai').length;
+    const belumDitempuh = cplData.filter((c) => c.status === 'Belum Ditempuh').length;
+    const nilaiValid    = cplData.filter((c) => c.nilai > 0);
+    const avgCpl        = nilaiValid.length > 0
+      ? (nilaiValid.reduce((s, c) => s + c.nilai, 0) / nilaiValid.length).toFixed(1)
+      : '0.0';
+
+    const doc = new jsPDF();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const marginX = 14;
+
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('SICPL - Portal Mahasiswa', marginX, 16);
+    doc.setFontSize(11);
+    doc.text('Laporan Capaian Pembelajaran Lulusan (CPL)', marginX, 23);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.text(
+      `Dicetak: ${new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'long', year: 'numeric' })}`,
+      marginX,
+      29,
+    );
+
+    doc.setFontSize(10);
+    const profileLines = [
+      `Mahasiswa      : ${displayName}`,
+      `NIM            : ${displayNim}`,
+      `Program Studi  : ${displayProdi}`,
+      `Rata-rata CPL  : ${avgCpl}`,
+      `Semester Aktif : ${selectedSemester}`,
+    ];
+    profileLines.forEach((line, i) => doc.text(line, marginX, 38 + i * 5.5));
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.text(
+      `Tercapai: ${tercapaiCount}/${cplData.length}   ·   Belum Tercapai: ${belumTercapai}   ·   Belum Ditempuh: ${belumDitempuh}   ·   Rata-rata CPL: ${avgCpl}`,
+      marginX,
+      68,
