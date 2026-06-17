@@ -166,3 +166,45 @@ export default function MahasiswaDashboard() {
         console.warn('[Dashboard] fetch semester gagal, pakai default:', err);
       }
     };
+
+    // CPL (BARU Tahap 3)
+    const loadCpl = async () => {
+      setCplLoading(true);
+      setCplError(null);
+      try {
+        const result = await fetchWithSession('/api/mahasiswa/cpl');
+        if (result.success && result.data) {
+          if (result.data.cplData?.length > 0) {
+            setCplData(result.data.cplData);
+          }
+          if (result.data.detailCpl?.length > 0) {
+            setDetailCpl(result.data.detailCpl);
+          }
+        }
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : 'Gagal memuat data CPL';
+        setCplError(msg);
+        console.error('[Dashboard] fetch CPL error — pakai fallback data.ts:', err);
+      } finally {
+        setCplLoading(false);
+      }
+    };
+
+    loadProfile();
+    loadSemesters();
+    loadCpl();
+  }, [sessionUser, fetchWithSession]);
+
+  // ── Handlers ───────────────────────────────────────────────────────────
+  const handleLogout = () => {
+    sessionStorage.removeItem('currentUser');
+    router.push('/');
+  };
+
+  const handleDownloadReport = async () => {
+    const { default: jsPDF } = await import('jspdf');
+    const { default: autoTable } = await import('jspdf-autotable');
+
+    const displayName  = profile?.nama_mahasiswa ?? sessionUser?.name ?? '-';
+    const displayNim   = profile?.nim             ?? sessionUser?.identifier ?? '-';
+    const displayProdi = profile?.prodi           ?? 'Teknik Industri UNS';
