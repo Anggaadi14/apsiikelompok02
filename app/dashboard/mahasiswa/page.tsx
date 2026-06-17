@@ -124,3 +124,45 @@ export default function MahasiswaDashboard() {
           'Content-Type': 'application/json',
         },
       });
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({}));
+        throw new Error(errBody.message ?? `HTTP ${res.status}`);
+      }
+      return res.json();
+    },
+    [sessionUser]
+  );
+
+  // ── Fetch semua data setelah session tersedia ──────────────────────────
+  useEffect(() => {
+    if (!sessionUser) return;
+
+    // Profile (sama dengan Tahap 2)
+    const loadProfile = async () => {
+      setProfileLoading(true);
+      setProfileError(null);
+      try {
+        const result = await fetchWithSession('/api/mahasiswa/profile');
+        setProfile(result.data as ProfileData);
+      } catch (err) {
+        const msg = err instanceof Error ? err.message : 'Gagal memuat profil';
+        setProfileError(msg);
+        console.error('[Dashboard] fetch profile error:', err);
+      } finally {
+        setProfileLoading(false);
+      }
+    };
+
+    // Semester (sama dengan Tahap 2)
+    const loadSemesters = async () => {
+      try {
+        const result = await fetchWithSession('/api/mahasiswa/semester');
+        const semesters = result.data as string[];
+        if (semesters.length > 0) {
+          setAvailableSemesters(semesters);
+          setSelectedSemester(semesters[0]);
+        }
+      } catch (err) {
+        console.warn('[Dashboard] fetch semester gagal, pakai default:', err);
+      }
+    };
