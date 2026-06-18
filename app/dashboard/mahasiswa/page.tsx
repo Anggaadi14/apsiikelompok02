@@ -334,3 +334,45 @@ export default function MahasiswaDashboard() {
 
   const nilaiCplValid = cplData.filter((c) => c.nilai > 0);
   const rataCpl = nilaiCplValid.length > 0
+    ? nilaiCplValid.reduce((sum, cpl) => sum + cpl.nilai, 0) / nilaiCplValid.length
+    : 0;
+
+  // Profile yang diteruskan ke CplView (Report tab) — fallback aman ke session
+  const cplProfile = {
+    nama:  profile?.nama_mahasiswa ?? sessionUser.name,
+    nim:   profile?.nim             ?? sessionUser.identifier,
+    prodi: profile?.prodi           ?? 'TI UNS',
+    ipk:   profile?.ipk             ?? 0,
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col font-sans antialiased">
+      <Navbar
+        portalTitle="SICPL - Portal Mahasiswa"
+        prodiLabel={profile?.prodi ?? 'Prodi Teknik Industri UNS'}
+        userName={sessionUser.name}
+        userNimNip={sessionUser.identifier}
+        userInitials={sessionUser.initials}
+        selectedSemester={selectedSemester}
+        setSelectedSemester={setSelectedSemester}
+        availableSemesters={availableSemesters}
+        notificationsCount={cplData.filter((c) => c.status === 'Belum Tercapai').length}
+        onLogout={handleLogout}
+      />
+
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar items={sidebarItems} activeTab={activeTab} setActiveTab={setActiveTab} />
+
+        <main className="flex-1 overflow-y-auto p-6">
+          {/* Error banner profil */}
+          {profileError && (
+            <div className="mb-3 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-700">
+              ⚠️ Gagal memuat data profil dari server. Menampilkan data dari sesi login.
+              {process.env.NODE_ENV === 'development' && (
+                <span className="ml-1 text-amber-500">({profileError})</span>
+              )}
+            </div>
+          )}
+
+          {/* Error banner CPL */}
+          {cplError && (
