@@ -292,3 +292,45 @@ export default function MahasiswaDashboard() {
       for (const ikItem of item.ik) {
         ikItem.cpmk.forEach((c, idx) => {
           rows.push([
+            idx === 0 ? `${ikItem.kode} (${ikItem.bobot}%)` : '',
+            c.kode,
+            c.matakuliah,
+            c.semester || '-',
+            c.nilaiMK,
+          ]);
+        });
+      }
+
+      if (rows.length === 0) {
+        doc.setFontSize(9);
+        doc.text('Belum ada IK/CPMK pembentuk.', marginX, cursorY);
+        cursorY += 8;
+        continue;
+      }
+
+      autoTable(doc, {
+        startY: cursorY,
+        margin: { left: marginX, right: marginX },
+        head: [['IK/PI', 'CPMK', 'Mata Kuliah', 'Smt', 'Nilai']],
+        body: rows,
+        styles: { fontSize: 8, cellPadding: 1.8 },
+        headStyles: { fillColor: [99, 102, 241] },
+        columnStyles: { 3: { cellWidth: 10 }, 4: { cellWidth: 14 } },
+      });
+      cursorY = ((doc as unknown as JsPdfWithAutoTable).lastAutoTable?.finalY ?? cursorY) + 8;
+    }
+
+    doc.save(`Laporan_CPL_${displayNim}_${String(displayName).replace(/\s+/g, '_')}.pdf`);
+  };
+
+  // Sidebar items
+  const sidebarItems = [
+    { id: 'dashboard', label: 'Dashboard',  icon: <Home  className="w-5 h-5" /> },
+    { id: 'cpl',       label: 'Detail CPL', icon: <Award className="w-5 h-5" /> },
+  ];
+
+  // ── Render ─────────────────────────────────────────────────────────────
+  if (!sessionUser) return <LoadingSpinner />;
+
+  const nilaiCplValid = cplData.filter((c) => c.nilai > 0);
+  const rataCpl = nilaiCplValid.length > 0
