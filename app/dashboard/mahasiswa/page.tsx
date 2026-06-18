@@ -250,3 +250,45 @@ export default function MahasiswaDashboard() {
       `Tercapai: ${tercapaiCount}/${cplData.length}   ·   Belum Tercapai: ${belumTercapai}   ·   Belum Ditempuh: ${belumDitempuh}   ·   Rata-rata CPL: ${avgCpl}`,
       marginX,
       68,
+    );
+    doc.setFont('helvetica', 'normal');
+
+    autoTable(doc, {
+      startY: 73,
+      margin: { left: marginX, right: marginX },
+      head: [['No', 'CPL', 'Deskripsi', 'Kategori', 'Nilai', 'Target', 'Status']],
+      body: cplData.map((c, idx) => {
+        const description =
+          detailCpl.find((d) => d.cpl === c.name)?.deskripsi ??
+          'Mampu menerapkan kompetensi rekayasa tingkat lanjut di bidang teknik industri';
+        return [idx + 1, c.name, description, c.kategori, c.nilai > 0 ? c.nilai : '-', c.target, c.status];
+      }),
+      styles: { fontSize: 8, cellPadding: 2 },
+      headStyles: { fillColor: [79, 70, 229] },
+      columnStyles: { 0: { cellWidth: 8 }, 1: { cellWidth: 16 }, 4: { cellWidth: 14 }, 5: { cellWidth: 14 } },
+    });
+
+    let cursorY = ((doc as unknown as JsPdfWithAutoTable).lastAutoTable?.finalY ?? 73) + 10;
+
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Detail Pembentuk Nilai CPL', marginX, cursorY);
+    cursorY += 6;
+    doc.setFont('helvetica', 'normal');
+
+    for (const item of detailCpl) {
+      if (cursorY > pageHeight - 40) {
+        doc.addPage();
+        cursorY = 16;
+      }
+
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.text(`${item.cpl} — ${item.status} (${item.nilai > 0 ? item.nilai.toFixed(1) : '-'})`, marginX, cursorY);
+      doc.setFont('helvetica', 'normal');
+      cursorY += 5;
+
+      const rows: (string | number)[][] = [];
+      for (const ikItem of item.ik) {
+        ikItem.cpmk.forEach((c, idx) => {
+          rows.push([
