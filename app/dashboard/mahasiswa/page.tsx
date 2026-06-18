@@ -376,3 +376,45 @@ export default function MahasiswaDashboard() {
 
           {/* Error banner CPL */}
           {cplError && (
+            <div className="mb-3 px-3 py-2 bg-orange-50 border border-orange-200 rounded-lg text-xs text-orange-700">
+              ⚠️ Data CPL diambil dari sumber fallback (data.ts).
+              {process.env.NODE_ENV === 'development' && (
+                <span className="ml-1 text-orange-500">({cplError})</span>
+              )}
+            </div>
+          )}
+
+          {/* ProfileCard */}
+          <ProfileCard
+            name={profile?.nama_mahasiswa ?? sessionUser.name}
+            nim={profile?.nim             ?? sessionUser.identifier}
+            angkatan={profile?.angkatan   ?? 0}
+            semester={profile?.semester_aktif ?? 0}
+            rataCpl={rataCpl}
+            onDownloadReport={handleDownloadReport}
+          />
+
+          {profileLoading && (
+            <p className="text-xs text-gray-400 text-center mt-1 mb-2">
+              Memuat data profil...
+            </p>
+          )}
+
+          {/* Tab views */}
+          <div className="transition-all duration-300">
+            {activeTab === 'dashboard' && (
+              cplLoading
+                ? <TabLoading message="Menghitung data CPL dari database..." />
+                : <DashboardView cplData={cplData} setActiveTab={setActiveTab} />
+            )}
+            {activeTab === 'cpl' && (
+              cplLoading
+                ? <TabLoading message="Memuat detail IK dan CPMK..." />
+                : <CplView cplData={cplData} detailCplData={detailCpl} profile={cplProfile} />
+            )}
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
