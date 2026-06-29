@@ -28,6 +28,12 @@ export async function GET(req: NextRequest) {
       }
     }
 
+    // Get a sample of 10 rows from nilai_detail
+    const { data: gradeSample } = await admin
+      .from('nilai_detail')
+      .select('*')
+      .limit(10)
+
     // 4. Get active academic years
     const { data: ta } = await admin
       .from('tahun_akademik')
@@ -35,11 +41,14 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
+      total_grades_count: gradeCounts?.length || 0,
+      unique_students_with_grades: Object.keys(counts).map(Number),
+      grade_sample: gradeSample,
       users,
       mahasiswa: mhs?.map(m => ({
         ...m,
         grade_count: counts[m.id_mahasiswa] || 0
-      })),
+      })).filter(m => counts[m.id_mahasiswa] > 0 || m.nim === 'I0323042' || m.nim === 'I0325024'), // filter to keep response clean
       tahun_akademik: ta,
       errors: {
         userErr,
