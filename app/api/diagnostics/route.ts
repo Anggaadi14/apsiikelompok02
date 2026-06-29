@@ -121,7 +121,12 @@ export async function GET(req: NextRequest) {
       upload_logs: uploadLogs,
       classes,
       target_courses: targetCourses,
-      media_cpmk: mediaCpmk?.filter(m => m.komponen_nilai && m.komponen_nilai.id_mata_kuliah === 46),
+      media_cpmk: mediaCpmk?.filter(m => {
+        const kn: any = m.komponen_nilai;
+        if (!kn) return false;
+        const singleKn = Array.isArray(kn) ? kn[0] : kn;
+        return singleKn?.id_mata_kuliah === 46;
+      }),
       users,
       mahasiswa: mhs?.map(m => ({
         ...m,
