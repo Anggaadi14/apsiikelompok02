@@ -85,13 +85,42 @@ export async function GET(request: NextRequest) {
       ipk = totalSKS > 0 ? Math.round((totalMutu / totalSKS) * 100) / 100 : 0
     }
 
+    // Fetch active academic year from tahun_akademik
+    const { data: activeTA } = await admin
+      .from('tahun_akademik')
+      .select('tahun_mulai, semester')
+      .eq('is_active', 1)
+      .maybeSingle<{ tahun_mulai: number; semester: 'Ganjil' | 'Genap' | 'Pendek' }>()
+
+    let angkatan = mhs.angkatan
+    if (!angkatan && mhs.nim) {
+      // Smart fallback: extract year from NIM (e.g. I0320045 -> 2020)
+      const match = mhs.nim.match(/^[A-Za-z]\d{2}(\d{2})\d+$/)
+      if (match && match[1]) {
+        angkatan = 2000 + parseInt(match[1], 10)
+      }
+    }
+
+    let semester_aktif = terms.size || 1
+    if (angkatan && activeTA) {
+      const diffYears = activeTA.tahun_mulai - angkatan
+      if (activeTA.semester === 'Ganjil') {
+        semester_aktif = diffYears * 2 + 1
+      } else if (activeTA.semester === 'Genap') {
+        semester_aktif = diffYears * 2 + 2
+      } else {
+        semester_aktif = diffYears * 2 + 1
+      }
+      if (semester_aktif < 1) semester_aktif = 1
+    }
+
     return Response.json({
       success: true,
       data: {
         nim: mhs.nim,
         nama_mahasiswa: mhs.nama_mahasiswa,
-        angkatan: mhs.angkatan,
-        semester_aktif: terms.size || 1,
+        angkatan: angkatan || 0,
+        semester_aktif,
         ipk,
         prodi: session.prodi,
       },

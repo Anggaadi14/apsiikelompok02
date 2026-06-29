@@ -337,10 +337,41 @@ export default function MahasiswaDashboard() {
     ? nilaiCplValid.reduce((sum, cpl) => sum + cpl.nilai, 0) / nilaiCplValid.length
     : 0;
 
+  // ── Smart Fallbacks & Calculations ────────────────────────────────────
+  const displayNim = profile?.nim || sessionUser.identifier || '';
+  
+  let displayAngkatan = profile?.angkatan || 0;
+  if (!displayAngkatan && displayNim) {
+    const match = displayNim.match(/^[A-Za-z]\d{2}(\d{2})\d+$/);
+    if (match && match[1]) {
+      displayAngkatan = 2000 + parseInt(match[1], 10);
+    }
+  }
+
+  let displaySemester = profile?.semester_aktif || 0;
+  if (!displaySemester && displayAngkatan && selectedSemester) {
+    // Parse e.g. "Ganjil 2024/2025" or "Genap 2024/2025"
+    const semMatch = selectedSemester.match(/(Ganjil|Genap|Pendek)\s+(\d{4})/i);
+    if (semMatch) {
+      const termType = semMatch[1];
+      const termYear = parseInt(semMatch[2], 10);
+      const diffYears = termYear - displayAngkatan;
+      if (termType.toLowerCase() === 'ganjil') {
+        displaySemester = diffYears * 2 + 1;
+      } else {
+        displaySemester = diffYears * 2 + 2;
+      }
+      if (displaySemester < 1) displaySemester = 1;
+    }
+  }
+  if (!displaySemester) {
+    displaySemester = 1;
+  }
+
   // Profile yang diteruskan ke CplView (Report tab) — fallback aman ke session
   const cplProfile = {
     nama:  profile?.nama_mahasiswa ?? sessionUser.name,
-    nim:   profile?.nim             ?? sessionUser.identifier,
+    nim:   displayNim,
     prodi: profile?.prodi           ?? 'TI UNS',
     ipk:   profile?.ipk             ?? 0,
   };
@@ -387,9 +418,9 @@ export default function MahasiswaDashboard() {
           {/* ProfileCard */}
           <ProfileCard
             name={profile?.nama_mahasiswa ?? sessionUser.name}
-            nim={profile?.nim             ?? sessionUser.identifier}
-            angkatan={profile?.angkatan   ?? 0}
-            semester={profile?.semester_aktif ?? 0}
+            nim={displayNim}
+            angkatan={displayAngkatan}
+            semester={displaySemester}
             rataCpl={rataCpl}
             onDownloadReport={handleDownloadReport}
           />
