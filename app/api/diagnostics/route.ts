@@ -54,6 +54,18 @@ export async function GET(req: NextRequest) {
       .select('*')
       .order('uploaded_at', { ascending: false })
 
+    // Fetch kelas_mk joined with mata_kuliah
+    const { data: classes } = await admin
+      .from('kelas_mk')
+      .select(`
+        id_kelas,
+        id_mata_kuliah,
+        tahun_akademik,
+        semester,
+        kode_kelas,
+        mata_kuliah:id_mata_kuliah ( kode_mk, nama_mk )
+      `)
+
     // 4. Get active academic years
     const { data: ta } = await admin
       .from('tahun_akademik')
@@ -67,6 +79,7 @@ export async function GET(req: NextRequest) {
       enrollments,
       data_bermasalah: dataBermasalah,
       upload_logs: uploadLogs,
+      classes,
       users,
       mahasiswa: mhs?.map(m => ({
         ...m,
