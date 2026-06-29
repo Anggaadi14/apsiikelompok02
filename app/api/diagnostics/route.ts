@@ -48,6 +48,12 @@ export async function GET(req: NextRequest) {
       .select('*')
       .limit(50)
 
+    // Fetch upload_log_nilai records
+    const { data: uploadLogs } = await admin
+      .from('upload_log_nilai')
+      .select('*')
+      .order('uploaded_at', { ascending: false })
+
     // 4. Get active academic years
     const { data: ta } = await admin
       .from('tahun_akademik')
@@ -60,6 +66,7 @@ export async function GET(req: NextRequest) {
       grade_sample: gradeSample,
       enrollments,
       data_bermasalah: dataBermasalah,
+      upload_logs: uploadLogs,
       users,
       mahasiswa: mhs?.map(m => ({
         ...m,
