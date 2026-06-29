@@ -71,7 +71,14 @@ export async function GET(req: NextRequest) {
       mahasiswa: mhs?.map(m => ({
         ...m,
         grade_count: counts[m.id_mahasiswa] || 0
-      })).filter(m => counts[m.id_mahasiswa] > 0 || m.nim === 'I0323042' || m.nim === 'I0325024'),
+      })).filter(m => 
+        counts[m.id_mahasiswa] > 0 || 
+        m.nim === 'I0323042' || 
+        m.nim === 'I0325024' ||
+        m.nama_mahasiswa.toLowerCase().includes('angga') ||
+        m.nama_mahasiswa.toLowerCase().includes('ferizki') ||
+        m.nama_mahasiswa.toLowerCase().includes('riswanto')
+      ),
       tahun_akademik: ta,
       errors: {
         userErr,
