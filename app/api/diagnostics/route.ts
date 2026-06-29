@@ -55,7 +55,7 @@ export async function GET(req: NextRequest) {
       .order('uploaded_at', { ascending: false })
 
     // Fetch kelas_mk joined with mata_kuliah
-    const { data: classes } = await admin
+    const { data: classes, error: classesErr } = await admin
       .from('kelas_mk')
       .select(`
         id_kelas,
@@ -97,7 +97,8 @@ export async function GET(req: NextRequest) {
         userErr,
         mhsErr,
         gradeErr,
-        enrollErr
+        enrollErr,
+        classesErr
       }
     })
   } catch (err: any) {
