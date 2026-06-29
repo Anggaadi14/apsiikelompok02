@@ -90,21 +90,16 @@ export async function GET(req: NextRequest) {
       `)
       .or('nama_mk.ilike.%fisika%,nama_mk.ilike.%analitika%')
 
-    // Fetch mapping_media_cpmk joined with komponen_nilai for Analitika Data
-    const { data: mediaCpmk } = await admin
+    // Fetch mapping_media_cpmk for Analitika Data CPMKs
+    const { data: mediaCpmk, error: mediaCpmkErr } = await admin
       .from('mapping_media_cpmk')
       .select(`
         id_mapping,
         id_cpmk,
         id_komponen,
-        bobot_persen,
-        komponen_nilai:id_komponen (
-          id_mata_kuliah,
-          kode_media,
-          nama_media,
-          bobot_terhadap_mk
-        )
+        bobot_persen
       `)
+      .in('id_cpmk', [35, 36, 37])
 
     // 4. Get active academic years
     const { data: ta } = await admin
@@ -121,12 +116,7 @@ export async function GET(req: NextRequest) {
       upload_logs: uploadLogs,
       classes,
       target_courses: targetCourses,
-      media_cpmk: mediaCpmk?.filter(m => {
-        const kn: any = m.komponen_nilai;
-        if (!kn) return false;
-        const singleKn = Array.isArray(kn) ? kn[0] : kn;
-        return singleKn?.id_mata_kuliah === 46;
-      }),
+      media_cpmk: mediaCpmk,
       users,
       mahasiswa: mhs?.map(m => ({
         ...m,
@@ -145,7 +135,8 @@ export async function GET(req: NextRequest) {
         mhsErr,
         gradeErr,
         enrollErr,
-        classesErr
+        classesErr,
+        mediaCpmkErr
       }
     })
   } catch (err: any) {
