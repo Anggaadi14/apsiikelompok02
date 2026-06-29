@@ -120,7 +120,7 @@ export const detailCPL: DetailCplItem[] = [
     ik: [
       {
         kode: 'IK-2.1',
-        deskripsi: 'Merancang sistem produksi yang efisien',
+        deskripsi: 'Merancang fasilitas produksi (lini produksi) dengan mempertimbangkan K3, sistem kerja dan aspek ekonomi',
         bobot: 100,
         nilai: 78,
         cpmk: [
@@ -147,6 +147,106 @@ export const detailCPL: DetailCplItem[] = [
     ]
   },
   {
+    cpl: 'CPL-3',
+    deskripsi: 'Mampu menerapkan kompetensi rekayasa tingkat lanjut di bidang teknik Industri',
+    nilai: 92,
+    status: 'Tercapai',
+    ik: [
+      {
+        kode: 'IK-3.1',
+        deskripsi: 'Mampu merancang eksperimen',
+        bobot: 100,
+        nilai: 92,
+        cpmk: [
+          {
+            kode: 'CPMK-3.1',
+            deskripsi: 'Mampu mengembangkan dan mengevaluasi skenario perbaikan sistem dengan pendekatan simulasi',
+            bobot: 100,
+            nilai: 92,
+            matakuliah: 'Simulasi Sistem (TI3202)',
+            semester: 6,
+            nilaiMK: 'A'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    cpl: 'CPL-4',
+    deskripsi: 'Mampu menerapkan kompetensi rekayasa tingkat lanjut di bidang teknik industri',
+    nilai: 88,
+    status: 'Tercapai',
+    ik: [
+      {
+        kode: 'IK-4.1',
+        deskripsi: 'Kemampuan memformulasikan masalah teknik yang kompleks',
+        bobot: 100,
+        nilai: 88,
+        cpmk: [
+          {
+            kode: 'CPMK-4.1',
+            deskripsi: 'Mampu menentukan karakteristik mutu dari suatu produk',
+            bobot: 100,
+            nilai: 88,
+            matakuliah: 'Pengendalian dan Penjaminan Mutu (TI3203)',
+            semester: 6,
+            nilaiMK: 'A'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    cpl: 'CPL-5',
+    deskripsi: 'Mampu menerapkan kompetensi rekayasa tingkat lanjut di bidang teknik Industri',
+    nilai: 75,
+    status: 'Belum Tercapai',
+    ik: [
+      {
+        kode: 'IK-5.1',
+        deskripsi: 'Mampu menggunakan metode teknik modern untuk menganalisis masalah keteknikan',
+        bobot: 100,
+        nilai: 75,
+        cpmk: [
+          {
+            kode: 'CPMK-5.1',
+            deskripsi: 'Mahasiswa mampu menerapkan Machine Learning untuk memecahkan masalah kompleks',
+            bobot: 100,
+            nilai: 75,
+            matakuliah: 'Analitika Data (TI3104)',
+            semester: 5,
+            nilaiMK: 'B'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    cpl: 'CPL-6',
+    deskripsi: 'Mampu menerapkan kompetensi rekayasa tingkat lanjut di bidang teknik industri',
+    nilai: 90,
+    status: 'Tercapai',
+    ik: [
+      {
+        kode: 'IK-6.1',
+        deskripsi: 'Mampu menyampaikan hasil pekerjaan dalam bentuk laporan tertulis',
+        bobot: 100,
+        nilai: 90,
+        cpmk: [
+          {
+            kode: 'CPMK-6.1',
+            deskripsi: 'Mampu menyusun laporan skripsi',
+            bobot: 100,
+            nilai: 90,
+            matakuliah: 'Skripsi (TI4201)',
+            semester: 8,
+            nilaiMK: 'A'
+          }
+        ]
+      }
+    ]
+  },
+  {
     cpl: 'CPL-7',
     deskripsi: 'Mampu berkomunikasi efektif dalam tim multidisiplin',
     nilai: 0,
@@ -154,18 +254,93 @@ export const detailCPL: DetailCplItem[] = [
     ik: [
       {
         kode: 'IK-7.1',
-        deskripsi: 'Berkomunikasi lisan dan tertulis dengan efektif',
+        deskripsi: 'Mampu membuat perencanaan waktu, biaya dan sumber daya dalam proyek keteknikan',
         bobot: 100,
         nilai: 0,
         cpmk: [
           {
             kode: 'CPMK-7.1',
-            deskripsi: 'Mahasiswa mampu mempresentasikan hasil kerja',
+            deskripsi: 'Mahasiswa mampu membuat rencana sumber daya dari aktivitas problem analysis',
             bobot: 100,
             nilai: 0,
-            matakuliah: 'Kerja Praktek (TI3501)',
+            matakuliah: 'Capstone I (TI4102)',
             semester: 7,
             nilaiMK: '-'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    cpl: 'CPL-8',
+    deskripsi: 'Mampu menerapkan kompetensi rekayasa tingkat lanjut di bidang teknik industri',
+    nilai: 86,
+    status: 'Tercapai',
+    ik: [
+      {
+        kode: 'IK-8.1',
+        deskripsi: 'Mampu melaksanakan tugas yang menjadi tanggung jawabnya dalam sebuah tim',
+        bobot: 100,
+        nilai: 86,
+        cpmk: [
+          {
+            kode: 'CPMK-8.1',
+            deskripsi: 'Mahasiswa melaksanakan tugas yang menjadi tanggung jawabnya dalam sebuah tim pada aktivitas problem analysis',
+            bobot: 100,
+            nilai: 86,
+            matakuliah: 'Capstone I (TI4102)',
+            semester: 7,
+            nilaiMK: 'A'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    cpl: 'CPL-9',
+    deskripsi: 'Mampu menerapkan kompetensi rekayasa tingkat lanjut di bidang teknik industri',
+    nilai: 0,
+    status: 'Belum Ditempuh',
+    ik: [
+      {
+        kode: 'IK-9.1',
+        deskripsi: 'Kemampuan menerapkan standar, regulasi, dan kebijakan yang relevan dalam penyelesaian masalah teknik industri',
+        bobot: 100,
+        nilai: 0,
+        cpmk: [
+          {
+            kode: 'CPMK-9.1',
+            deskripsi: 'Menunjukkan etika seorang insinyur professional dalam menghasilkan rancangan yang memiliki keberpihakan pada keamanan, keselamatan, sosiokultural, dan lingkungan',
+            bobot: 100,
+            nilai: 0,
+            matakuliah: 'Capstone II (TI4202)',
+            semester: 8,
+            nilaiMK: '-'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    cpl: 'CPL-10',
+    deskripsi: 'Mampu menerapkan kompetensi rekayasa tingkat lanjut di bidang teknik industri',
+    nilai: 83,
+    status: 'Tercapai',
+    ik: [
+      {
+        kode: 'IK-10.1',
+        deskripsi: 'Mengidentifikasi sumber pengetahuan dan informasi untuk meningkatkan kompetensi',
+        bobot: 100,
+        nilai: 83,
+        cpmk: [
+          {
+            kode: 'CPMK-10.1',
+            deskripsi: 'Menggali sumber informasi yang diperlukan dalam memformulasikan masalah',
+            bobot: 100,
+            nilai: 83,
+            matakuliah: 'Metodologi Penelitian (TI3204)',
+            semester: 6,
+            nilaiMK: 'B+'
           }
         ]
       }
