@@ -94,7 +94,6 @@ export async function GET(req: NextRequest) {
     const { data: mediaCpmk, error: mediaCpmkErr } = await admin
       .from('mapping_media_cpmk')
       .select(`
-        id_mapping,
         id_cpmk,
         id_komponen,
         bobot_persen
