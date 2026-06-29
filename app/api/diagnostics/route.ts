@@ -79,7 +79,7 @@ export async function GET(req: NextRequest) {
           deskripsi_id,
           mapping_cpmk_ik (
             id_ik,
-            bobot_persen,
+            bobot_percent:bobot_persen,
             indikator_kinerja:id_ik (
               kode_ik,
               id_cpl,
@@ -88,7 +88,7 @@ export async function GET(req: NextRequest) {
           )
         )
       `)
-      .or('kode_mk.eq.08033142038,kode_mk.eq.8033142038,kode_mk.eq.08033143002,kode_mk.eq.8033143002')
+      .or('nama_mk.ilike.%fisika%,nama_mk.ilike.%analitika%')
 
     // 4. Get active academic years
     const { data: ta } = await admin
