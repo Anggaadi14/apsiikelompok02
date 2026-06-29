@@ -100,6 +100,12 @@ export async function GET(req: NextRequest) {
       `)
       .in('id_cpmk', [35, 36, 37])
 
+    // Query count of all mapping_media_cpmk where bobot_persen > 0
+    const { count: nonZeroMappingCount } = await admin
+      .from('mapping_media_cpmk')
+      .select('*', { count: 'exact', head: true })
+      .gt('bobot_persen', 0)
+
     // 4. Get active academic years
     const { data: ta } = await admin
       .from('tahun_akademik')
@@ -116,6 +122,7 @@ export async function GET(req: NextRequest) {
       classes,
       target_courses: targetCourses,
       media_cpmk: mediaCpmk,
+      non_zero_mapping_count: nonZeroMappingCount,
       users,
       mahasiswa: mhs?.map(m => ({
         ...m,
