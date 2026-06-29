@@ -36,6 +36,18 @@ export async function GET(req: NextRequest) {
       .select('*')
       .limit(10)
 
+    // Check enrollments for Ferizki (663) and Riswanto (25)
+    const { data: enrollments, error: enrollErr } = await admin
+      .from('mahasiswa_kelas')
+      .select('id_kelas, id_mahasiswa')
+      .in('id_mahasiswa', [25, 663])
+
+    // Fetch data_bermasalah records
+    const { data: dataBermasalah } = await admin
+      .from('data_bermasalah')
+      .select('*')
+      .limit(50)
+
     // 4. Get active academic years
     const { data: ta } = await admin
       .from('tahun_akademik')
@@ -46,16 +58,19 @@ export async function GET(req: NextRequest) {
       total_grades_count: gradeCounts?.length || 0,
       unique_students_with_grades: Object.keys(counts).map(Number),
       grade_sample: gradeSample,
+      enrollments,
+      data_bermasalah: dataBermasalah,
       users,
       mahasiswa: mhs?.map(m => ({
         ...m,
         grade_count: counts[m.id_mahasiswa] || 0
-      })).filter(m => counts[m.id_mahasiswa] > 0 || m.nim === 'I0323042' || m.nim === 'I0325024'), // filter to keep response clean
+      })).filter(m => counts[m.id_mahasiswa] > 0 || m.nim === 'I0323042' || m.nim === 'I0325024'),
       tahun_akademik: ta,
       errors: {
         userErr,
         mhsErr,
-        gradeErr
+        gradeErr,
+        enrollErr
       }
     })
   } catch (err: any) {
