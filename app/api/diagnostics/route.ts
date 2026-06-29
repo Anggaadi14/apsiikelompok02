@@ -66,6 +66,30 @@ export async function GET(req: NextRequest) {
         mata_kuliah:id_mata_kuliah ( kode_mk, nama_mk )
       `)
 
+    // Fetch Fisika I and Analitika Data courses and their CPMK and mappings
+    const { data: targetCourses } = await admin
+      .from('mata_kuliah')
+      .select(`
+        id_mata_kuliah,
+        kode_mk,
+        nama_mk,
+        cpmk (
+          id_cpmk,
+          kode_cpmk,
+          deskripsi_id,
+          mapping_cpmk_ik (
+            id_ik,
+            bobot_persen,
+            indikator_kinerja:id_ik (
+              kode_ik,
+              id_cpl,
+              cpl:id_cpl ( kode_cpl )
+            )
+          )
+        )
+      `)
+      .or('kode_mk.eq.08033142038,kode_mk.eq.8033142038,kode_mk.eq.08033143002,kode_mk.eq.8033143002')
+
     // 4. Get active academic years
     const { data: ta } = await admin
       .from('tahun_akademik')
@@ -80,6 +104,7 @@ export async function GET(req: NextRequest) {
       data_bermasalah: dataBermasalah,
       upload_logs: uploadLogs,
       classes,
+      target_courses: targetCourses,
       users,
       mahasiswa: mhs?.map(m => ({
         ...m,
